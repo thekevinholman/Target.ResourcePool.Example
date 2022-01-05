@@ -1,0 +1,68 @@
+<ManagementPack ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>Target.ResourcePool.Example</ID>
+      <Version>1.0.0.1</Version>
+    </Identity>
+    <Name>Target.ResourcePool.Example</Name>
+    <References>
+      <Reference Alias="SC">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8427.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8500.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8427.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8500.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Monitoring>
+    <Rules>
+      <Rule ID="Target.ResourcePool.Example.RunSampleScriptRule" Enabled="true" Target="SC!Microsoft.SystemCenter.AllManagementServersPool" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>Custom</Category>
+        <DataSources>
+          <DataSource ID="SchedDS" TypeID="System!System.SimpleScheduler">
+            <IntervalSeconds>30</IntervalSeconds>
+            <SyncTime></SyncTime>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="PoshWA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+            <ScriptName>momscriptevent.ps1</ScriptName>
+            <ScriptBody><![CDATA[
+$api = new-object -comObject 'MOM.ScriptAPI'
+$api.LogScriptEvent("momscriptevent.ps1",9999,0,"this is a test event")
+]]></ScriptBody>
+            <TimeoutSeconds>30</TimeoutSeconds>
+          </WriteAction>
+        </WriteActions>
+      </Rule>
+    </Rules>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Target.ResourcePool.Example">
+          <Name>Target Resource Pool Example</Name>
+          <Description>This is an example MP on taking a script based workflow and targeting a resource pool to make the workflow highly available</Description>
+        </DisplayString>
+        <DisplayString ElementID="Target.ResourcePool.Example.RunSampleScriptRule">
+          <Name>Custom - Run a sample script targeted to resource pool</Name>
+          <Description />
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
